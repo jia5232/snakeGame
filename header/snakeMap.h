@@ -1,23 +1,19 @@
 #ifndef SnakeMap_H
 #define SnakeMap_H
 #include <iostream>
+#include <ncurses.h>
+#include "Snake.h"
 using namespace std;
 class SnakeMap {
 private:
-    int row_f;
-    int col_f;
-    
-
+    WINDOW* mainWin;
+    int **mapArray;
+    int mapWidth;
+    int mapHeight;
 public:
-char **mapArray;
-    SnakeMap(int row = 24, int col = 48);
-    SnakeMap(const SnakeMap &sM);
-    void setSnakeMap(char **mA);
-    char** getSnakeMap();
-    SnakeMap &operator=(const SnakeMap &sM);
-    SnakeMap &operator=(const char **mA);
-    char* operator[](int idx)const;
-    friend ostream &operator<<(ostream &os, const SnakeMap &sM);
+    SnakeMap(WINDOW* mainWin,int **map, int height, int width);
+    void drawSnakeMap(Snake& sk, int direction);
+    void mapReset();
 };
 
 #endif

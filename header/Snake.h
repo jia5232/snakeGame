@@ -1,30 +1,35 @@
 #ifndef SNAKE_H
 #define SNAKE_H
 #include <vector>
+#include <ncurses.h>
+#include "Snake.h"
 using namespace std;
-class Snake{
-    struct SnakeVector{
-        int row, col;
-    };
-    private:
+struct SnakeVector
+{
+    int row, col;
+};
+class Snake
+{
+
+private:
     vector<SnakeVector> snake;
+    WINDOW *mainWin;
     int snakeLen;
     int snakeDirection;
     int snakeHeadRow;
     int snakeHeadCol;
-    int mapRow, mapCol;
-    public:
-    
-    Snake(int len = 3, int direction = 1, int row = 0, int col = 0);
-    // Snake(const char *snakeArray);
+    int mapWidth, mapHeight;
+
+public:
+    Snake(int mapHeight, int len);
     int getSnakeLen() const;
-    // int getSnakeDirection() const;
     void setSnakeDirection(int direction);
-    // void setSnakeLen(int len);
+    void setSnakeLen(int len);
     void setSnakeHeadPosition(int row, int col);
     void pushSnake();
-    void popSnake();
+    void popSnake() ;
     void snakeMove(int direction);
+    vector<SnakeVector> getSnake() const;
 };
 
 #endif

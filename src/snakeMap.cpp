@@ -1,93 +1,90 @@
 #include "SnakeMap.h"
-#include <iostream>
+#include "Snake.h"
+#include <vector>
+#include <ncurses.h>
 using namespace std;
 
-SnakeMap::SnakeMap(int row, int col)
+SnakeMap::SnakeMap(WINDOW* mainWin,int **map, int height, int width): mainWin(mainWin), mapWidth(width), mapHeight(height)
 {
-    row_f = row;
-    col_f = col;
-    mapArray = new char *[row_f];
-    for (int i = 0; i < row_f; i++)
-    {
-        mapArray[i] = new char[col_f];
+    mapArray = new int*[mapHeight];
+    for(int i = 0; i < mapHeight; i++){
+        mapArray[i] = new int[mapHeight];
     }
-    for (int i = 0; i < row_f; i++)
-    {
-        for (int j = 0; j < col_f; j++)
-        {
-            mapArray[i][j] = '-';
+    for(int i = 0; i < mapHeight; i++){
+        for(int j = 0; j < mapHeight; j++){
+            mapArray[i][j] = map[i][j];
         }
     }
-    for (int i = 0; i < row_f; i += row_f - 1)
-    {
-        for (int j = 0; j < col_f; j++)
-        {
-            mapArray[i][j] = '#';
-        }
-    }
-    for (int i = 0; i < row_f; i++)
-    {
-        for (int j = 0; j < col_f; j += col_f - 1)
-        {
-            mapArray[i][j] = '#';
-        }
-    }
+    // for(int i = 0; i < mapHeight; i++){
+    //     for(int j = 0; j < mapHeight; j++){
+    //         cout << mapArray[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
 }
-void SnakeMap::setSnakeMap(char **mA)
-{
-    for (int i = 0; i < row_f; i++)
-    {
-        for (int j = 0; j < col_f; j++)
-        {
-            mapArray[i][j] = mA[i][j];
+void SnakeMap::mapReset(){
+
+}
+void SnakeMap::drawSnakeMap(Snake& sk, int direction){
+    sk.snakeMove(direction);
+    vector<SnakeVector> sv = sk.getSnake();
+    int tempMapArray[21][21];
+    for(int i = 0; i < mapHeight; i++){
+        for(int j = 0; j < mapHeight; j++){
+            tempMapArray[i][j] = mapArray[i][j];
+            }
+    }
+    for(int i = 0 ; i < sv.size(); i++){
+        int row = sv[i].row;
+        int col = sv[i].col;
+        if(i == 0){
+            tempMapArray[row][col] = 3;
+        }else{
+            tempMapArray[row][col] = 4;
+        }
+    }
+    // for(int i = 0; i < mapHeight; i++){
+    //     for(int j = 0; j < mapWidth; j++){
+    //         cout << tempMapArray[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
+    for(int i = 0; i < mapHeight; i++){
+        for(int j = 0; j < mapWidth; j++){
+            if(j % 2 != 0){
+                mvwprintw(mainWin,i, j, " ");
+            }else{
+                if(tempMapArray[i][j/2] == 2){
+                mvwprintw(mainWin,i, j, "+");
+                }else if(tempMapArray[i][j/2] == 0){
+                    mvwprintw(mainWin,i, j, "-");
+                }else if(tempMapArray[i][j/2] == 1){
+                    mvwprintw(mainWin,i, j, "#");
+                }
+                else if(tempMapArray[i][j/2] == 3){
+                    mvwprintw(mainWin,i, j, "^");
+                }
+                else if(tempMapArray[i][j/2] == 4){
+                    mvwprintw(mainWin,i, j, "@");
+                }
+            }
+            
+            
         }
     }
 }
 
-char **SnakeMap::getSnakeMap()
-{
-    return mapArray;
-}
 
-char *SnakeMap::operator[](int idx)const
-{
-    return mapArray[idx];
-}
 
-SnakeMap& SnakeMap::operator=(const SnakeMap &sM)
-{
-    for (int i = 0; i < row_f; i++)
-    {
-        for (int j = 0; j < col_f; j++)
-        {
-            mapArray[i][j] = sM[i][j];
-        }
-    }
-    return *this;
-}
-
-SnakeMap& SnakeMap::operator=(const char **mA)
-{
-    for (int i = 0; i < row_f; i++)
-    {
-        for (int j = 0; j < col_f; j++)
-        {
-            mapArray[i][j] = mA[i][j];
-        }
-    }
-    return *this;
-}
-
-ostream &operator<<(ostream &os, const SnakeMap &sM)
-{
-    for (int i = 0; i < sM.row_f; i++)
-    {
-        for (int j = 0; j < sM.col_f; j++)
-        {
-            os << sM[i][j] << " ";
-        }
-        os << endl;
-    }
-    return os;
-}
-
+// for(int row = 0; row < height; row++){
+//         for(int col = 0; col < width; col++){
+//             if( row == 0 && col == 0 || row == height - 1 && col == width - 1 || row == height - 1 && col == 0 || row == 0 && col == width -1){
+//                 mvwprintw(mainWin, row, col, "+");
+//             }
+//             else if(row == 0 || col == 0 || row == height - 1 || col == width - 1){
+//                 mvwprintw(mainWin, row, col, "#");
+//             }else if(col % 2 == 0) {
+//                 mvwprintw(mainWin, row, col, "-");
+//             }
+//         }
+//     }
