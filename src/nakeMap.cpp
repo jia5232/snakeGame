@@ -31,6 +31,9 @@ int SnakeMap::drawSnakeMap(Snake& sk, int direction, ItemGenerator& growth, Item
     mapArray[growthCor.row][growthCor.col] = 5;
     mapArray[poisonCor.row][poisonCor.col] = 6;
 
+    if(sv.size() < 3){
+        return GAME_OVER;
+    }
     for(int i = 0 ; i < sv.size(); i++){
         int row = sv[i].row;
         int col = sv[i].col;
