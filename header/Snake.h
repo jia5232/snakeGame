@@ -22,14 +22,12 @@ private:
 
 public:
     Snake(int mapHeight, int len);
-    int getSnakeLen() const;
     void setSnakeDirection(int direction);
-    void setSnakeLen(int len);
-    void setSnakeHeadPosition(int row, int col);
-    void pushSnake();
-    void popSnake() ;
+    SnakeVector popSnake() ;
     void snakeMove(int direction);
     vector<SnakeVector> getSnake() const;
+    // int getSnakeLen() const;
+    // void setSnakeLen(int len);
 };
 
 #endif

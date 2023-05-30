@@ -4,7 +4,10 @@
 #include <thread>
 #include "Snake.h"
 #include "SnakeMap.h"
+#include "ItemGenerator.h"
+
 using namespace std;
+#define TICK_RATE 300
 
 int main()
 {
@@ -12,7 +15,9 @@ int main()
     int MAP_WIDTH = 41;
     int mainWinRow = 5;
     int mainWinCol = 5;
+    
     initscr();
+    resize_term(300, 300);
     curs_set(0);
     cbreak();
     noecho();
@@ -29,11 +34,13 @@ int main()
 
     SnakeMap sMap(mainWindow, mapTempPtr, MAP_HEIGHT, MAP_WIDTH);
     Snake sk(MAP_HEIGHT, 3);
+    ItemGenerator growth(5, 5);
+    ItemGenerator poison(2, 2);
 
     bool quit = false;
     bool die = false;
     // 틱 간격 설정
-    constexpr chrono::milliseconds tickDuration(200); // 200 밀리초 (0.2초)
+    constexpr chrono::milliseconds tickDuration(TICK_RATE); // 200 밀리초 (0.2초)
     while (!quit)
     {
         // 키 입력 처리
@@ -64,12 +71,13 @@ int main()
 
         // 게임 화면 업데이트
         clear();
-        sMap.drawSnakeMap(sk, direction);
-        // die = sk.snakeMove(direction);
-        // if (die)
-        // {
-        //     break;
-        // }
+        int gameState = sMap.drawSnakeMap(sk, direction, growth, poison);
+        if (gameState == -1){
+            clear();
+            mvwprintw(mainWindow,10, 10, "Game Over!");
+            wrefresh(mainWindow);
+            break;
+        }
         wrefresh(mainWindow);
 
         // 틱 간격 지연
