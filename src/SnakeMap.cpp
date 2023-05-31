@@ -1,6 +1,7 @@
 #include "SnakeMap.h"
 #include "Snake.h"
 #include "ItemGenerator.h"
+#include "GateGenerator.h"
 #include <vector>
 #include <ncurses.h>
 using namespace std;
@@ -22,7 +23,7 @@ SnakeMap::SnakeMap(WINDOW* mainWin,int **map, int height, int width): mainWin(ma
 void SnakeMap::mapReset(){
 
 }
-int SnakeMap::drawSnakeMap(Snake& sk, int direction, ItemGenerator& growth, ItemGenerator& poison){
+int SnakeMap::drawSnakeMap(Snake& sk, int direction, ItemGenerator& growth, ItemGenerator& poison, GateGenerator& gate){
     vector<SnakeVector> sv = sk.getSnake();
     bool isGrowth = false;
     bool isPoison = false;
@@ -30,6 +31,9 @@ int SnakeMap::drawSnakeMap(Snake& sk, int direction, ItemGenerator& growth, Item
     ItemCoordinate poisonCor = poison.getItemCoordinate();
     mapArray[growthCor.row][growthCor.col] = 5;
     mapArray[poisonCor.row][poisonCor.col] = 6;
+
+    GateCoordinate gate1 = gate.getGate1();
+    GateCoordinate gate2 = gate.getGate2();
 
     if(sv.size() < 3){
         return GAME_OVER;
@@ -58,6 +62,11 @@ int SnakeMap::drawSnakeMap(Snake& sk, int direction, ItemGenerator& growth, Item
     }
 
     for(int i = 0; i < mapHeight; i++){
+        start_color();
+        init_pair(1, COLOR_GREEN, COLOR_BLACK);
+        init_pair(2, COLOR_RED, COLOR_BLACK);
+        init_pair(3, COLOR_YELLOW, COLOR_BLACK);
+
         for(int j = 0; j < mapWidth; j++){
             if(j % 2 != 0){
                 mvwprintw(mainWin,i, j, " ");
@@ -76,10 +85,18 @@ int SnakeMap::drawSnakeMap(Snake& sk, int direction, ItemGenerator& growth, Item
                     mvwprintw(mainWin,i, j, "@");
                 }
                 else if(mapArray[i][j/2] == 5){
+                    wattron(mainWin, COLOR_PAIR(1));
                     mvwprintw(mainWin,i, j, "$");
+                    wattroff(mainWin, COLOR_PAIR(1));
                 }
                 else if(mapArray[i][j/2] == 6){
+                    wattron(mainWin, COLOR_PAIR(2));
                     mvwprintw(mainWin,i, j, "P");
+                    wattroff(mainWin, COLOR_PAIR(2));
+                }else if(mapArray[i][j/2] == 7){
+                    wattron(mainWin, COLOR_PAIR(3));
+                    mvwprintw(mainWin, i, j, "G");
+                    wattroff(mainWin, COLOR_PAIR(3));
                 }
             } 
         }
@@ -113,6 +130,12 @@ int SnakeMap::drawSnakeMap(Snake& sk, int direction, ItemGenerator& growth, Item
     }else if(isPoison){
         ItemCoordinate poisonCor = poison.generateRandomItem(mapArray, mapHeight - 2);
         mapArray[poisonCor.row][poisonCor.col] = 6;
+    }
+
+    // Gate
+    if(gate.getGateTimer() <= 0){
+        mapArray[gate1.row][gate1.col] = 7;
+        mapArray[gate2.row][gate2.col] = 7;
     }
 
     return GAME_CONTINUE;
