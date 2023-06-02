@@ -23,7 +23,7 @@ SnakeMap::SnakeMap(WINDOW* mainWin,int **map, int height, int width): mainWin(ma
 void SnakeMap::mapReset(){
 
 }
-int SnakeMap::drawSnakeMap(Snake& sk, int direction, ItemGenerator& growth, ItemGenerator& poison, GateGenerator& gate){
+int SnakeMap::drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& poison, GateGenerator& gate){
     vector<SnakeVector> sv = sk.getSnake();
     bool isGrowth = false;
     bool isPoison = false;
@@ -32,8 +32,9 @@ int SnakeMap::drawSnakeMap(Snake& sk, int direction, ItemGenerator& growth, Item
     mapArray[growthCor.row][growthCor.col] = 5;
     mapArray[poisonCor.row][poisonCor.col] = 6;
 
-    GateCoordinate gate1 = gate.getGate1();
-    GateCoordinate gate2 = gate.getGate2();
+    // bool isGate = false;
+    GateCoordinate gate1 = gate.getGate(1);
+    GateCoordinate gate2 = gate.getGate(2);
 
     if(sv.size() < 3){
         return GAME_OVER;
@@ -50,8 +51,16 @@ int SnakeMap::drawSnakeMap(Snake& sk, int direction, ItemGenerator& growth, Item
                 isGrowth = true;
             } else if (mapArray[row][col] == 6) {
                 isPoison = true;
+            } else if(mapArray[row][col] == 7){
+                // isGate = true;
+                if(row == gate1.row && col == gate1.col){ // gate1로 진입 시
+                    gate.setSnake(gate2, sk, mapArray); // gate2를 이용해 방향 스네이크 헤드 위치 및 방향 변경
+                }else if(row == gate2.row && col == gate2.col){ // gate2로 진입 시
+                    gate.setSnake(gate1, sk, mapArray); // gate1을 이용해 방향 스네이크 헤드 위치 및 방향 변경
+                }
             }
-            mapArray[row][col] = 3;
+            // mapArray[row][col] = 3;
+            mapArray[sv[i].row][sv[i].col] = 3;
         } else {
             // 스네이크 헤드와 바디의 좌표가 겹칠 때 리턴 GAME_OVER
             if (row == sv[0].row && col == sv[0].col) {
@@ -102,7 +111,7 @@ int SnakeMap::drawSnakeMap(Snake& sk, int direction, ItemGenerator& growth, Item
         }
     }
 
-    sk.snakeMove(direction);
+    sk.snakeMove();
     if(isPoison){
         SnakeVector skPop = sk.popSnake();
         mapArray[skPop.row][skPop.col] = 0;

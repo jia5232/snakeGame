@@ -2,7 +2,6 @@
 #define SNAKE_H
 #include <vector>
 #include <ncurses.h>
-#include "Snake.h"
 using namespace std;
 struct SnakeVector
 {
@@ -21,11 +20,13 @@ private:
     int mapWidth, mapHeight;
 
 public:
-    Snake(int mapHeight, int len);
-    void setSnakeDirection(int direction);
+    Snake(int mapHeight, int len, int direction);
     SnakeVector popSnake() ;
-    void snakeMove(int direction);
+    void snakeMove();
     vector<SnakeVector> getSnake() const;
+    void setSnakeDirection(int direction);
+    int getSnakeDirection() const;
+    void setSnakeHead(int row, int col);
     // int getSnakeLen() const;
     // void setSnakeLen(int len);
 };
