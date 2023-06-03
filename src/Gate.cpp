@@ -1,14 +1,14 @@
-#include "GateGenerator.h"
+#include "Gate.h"
 #include <iostream>
 #include <random>
 using namespace std;
 
-GateGenerator::GateGenerator(int **mapArray){
+Gate::Gate(int **mapArray){
     generateRandomGate(mapArray);
     gateTimer = 50;
 }
 
-void GateGenerator::generateRandomGate(int **mapArray)
+void Gate::generateRandomGate(int **mapArray)
 {
     random_device rd;
     mt19937 gen(rd());
@@ -40,7 +40,7 @@ void GateGenerator::generateRandomGate(int **mapArray)
     cout << gate2.row << " " << gate2.col  << endl;
 }
 
-GateCoordinate GateGenerator::getGate(int gateNum){
+GateCoordinate Gate::getGate(int gateNum){
     gateTimer--;
     if (gateNum == 1){
         return gate1;
@@ -49,11 +49,11 @@ GateCoordinate GateGenerator::getGate(int gateNum){
     }
 }
 
-int GateGenerator::getGateTimer(){
+int Gate::getGateTimer(){
     return gateTimer;
 }
 
-void GateGenerator::isGateLocation(GateCoordinate& gate){
+void Gate::isGateLocation(GateCoordinate& gate){
     if(gate.row == 0 || gate.col == 0 || gate.row == 20 || gate.col == 20){
         gate.location = 0; // 가장자리 벽 게이트
     }else{ 
@@ -61,11 +61,11 @@ void GateGenerator::isGateLocation(GateCoordinate& gate){
     }
 }
 
-int GateGenerator::getGateLocation(GateCoordinate& gate){
+int Gate::getGateLocation(GateCoordinate& gate){
     return gate.location;
 }
 
-void GateGenerator::setSnake(GateCoordinate& gate, Snake& snake, int **mapArray){
+void Gate::setSnake(GateCoordinate& gate, Snake& snake, int **mapArray){
     if(gate.location == 0){
         edgeGate(gate.row, gate.col, snake);
     }
@@ -74,7 +74,7 @@ void GateGenerator::setSnake(GateCoordinate& gate, Snake& snake, int **mapArray)
     }
 }
 
-void GateGenerator::edgeGate(int gateRow, int gateCol, Snake& snake){
+void Gate::edgeGate(int gateRow, int gateCol, Snake& snake){
     if(gateRow == 0){
         snake.setSnakeDirection(KEY_DOWN);
         snake.setSnakeHead(gateRow + 1, gateCol);
@@ -90,7 +90,7 @@ void GateGenerator::edgeGate(int gateRow, int gateCol, Snake& snake){
     }
 }
 
-void GateGenerator::centerGate(int gateRow, int gateCol, Snake& snake, int **mapArray){
+void Gate::centerGate(int gateRow, int gateCol, Snake& snake, int **mapArray){
     int dir = snake.getSnakeDirection();
 
     int down = gateRow + 1; // 아랫쪽 방향 
@@ -106,12 +106,12 @@ void GateGenerator::centerGate(int gateRow, int gateCol, Snake& snake, int **map
         }else if(mapArray[gateRow][right] == 0){ // 오
             snake.setSnakeDirection(KEY_RIGHT);
             snake.setSnakeHead(gateRow, right);
-        }else if(mapArray[down][gateCol] == 0){ // 아
-            snake.setSnakeDirection(KEY_DOWN);
-            snake.setSnakeHead(down, gateCol);
         }else if(mapArray[gateRow][left] == 0){ // 왼
             snake.setSnakeDirection(KEY_LEFT);
             snake.setSnakeHead(gateRow, left);
+        }else if(mapArray[down][gateCol] == 0){ // 아
+            snake.setSnakeDirection(KEY_DOWN);
+            snake.setSnakeHead(down, gateCol);
         }
     }
     else if (dir == KEY_RIGHT){
@@ -121,12 +121,12 @@ void GateGenerator::centerGate(int gateRow, int gateCol, Snake& snake, int **map
         }else if(mapArray[down][gateCol] == 0){ // 아
             snake.setSnakeDirection(KEY_DOWN);
             snake.setSnakeHead(down, gateCol);
-        }else if(mapArray[gateRow][left] == 0){ // 왼
-            snake.setSnakeDirection(KEY_LEFT);
-            snake.setSnakeHead(gateRow, left);
         }else if(mapArray[up][gateCol] == 0){ // 위
             snake.setSnakeDirection(KEY_UP);
             snake.setSnakeHead(up, gateCol);
+        }else if(mapArray[gateRow][left] == 0){ // 왼
+            snake.setSnakeDirection(KEY_LEFT);
+            snake.setSnakeHead(gateRow, left);
         }
     }
     else if (dir == KEY_DOWN){
@@ -136,12 +136,12 @@ void GateGenerator::centerGate(int gateRow, int gateCol, Snake& snake, int **map
         }else if(mapArray[gateRow][left] == 0){ // 왼
             snake.setSnakeDirection(KEY_LEFT);
             snake.setSnakeHead(gateRow, left);
-        }else if(mapArray[up][gateCol] == 0){ // 위
-            snake.setSnakeDirection(KEY_UP);
-            snake.setSnakeHead(up, gateCol);
         }else if(mapArray[gateRow][right] == 0){ // 오
             snake.setSnakeDirection(KEY_RIGHT);
             snake.setSnakeHead(gateRow, right);
+        }else if(mapArray[up][gateCol] == 0){ // 위
+            snake.setSnakeDirection(KEY_UP);
+            snake.setSnakeHead(up, gateCol);
         }
     }
     else if (dir == KEY_LEFT){
@@ -151,12 +151,12 @@ void GateGenerator::centerGate(int gateRow, int gateCol, Snake& snake, int **map
         }else if(mapArray[up][gateCol] == 0){ // 위
             snake.setSnakeDirection(KEY_UP);
             snake.setSnakeHead(up, gateCol);
-        }else if(mapArray[gateRow][right] == 0){ // 오
-            snake.setSnakeDirection(KEY_RIGHT);
-            snake.setSnakeHead(gateRow, right);
         }else if(mapArray[down][gateCol] == 0){ // 아
             snake.setSnakeDirection(KEY_DOWN);
             snake.setSnakeHead(down, gateCol);
+        }else if(mapArray[gateRow][right] == 0){ // 오
+            snake.setSnakeDirection(KEY_RIGHT);
+            snake.setSnakeHead(gateRow, right);
         }
     }
 }

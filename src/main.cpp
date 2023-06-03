@@ -5,7 +5,7 @@
 #include "Snake.h"
 #include "SnakeMap.h"
 #include "ItemGenerator.h"
-#include "GateGenerator.h"
+#include "Gate.h"
 
 using namespace std;
 #define TICK_RATE 150
@@ -59,7 +59,7 @@ int main()
     Snake sk(MAP_HEIGHT, 3, direction);
     ItemGenerator growth(5, 5);
     ItemGenerator poison(2, 2);
-    GateGenerator gate(mapTempPtr);
+    Gate gate(mapTempPtr);
 
     bool quit = false;
     // 틱 간격 설정
@@ -106,7 +106,7 @@ int main()
             sk = Snake(MAP_HEIGHT, 3, direction);
             growth = ItemGenerator(5, 5);
             poison = ItemGenerator(2, 2);
-            gate= GateGenerator(mapTempPtr);
+            gate= Gate(mapTempPtr);
         } else if(gameState == 3){
             clear();
             mvwprintw(mainWindow,0, 0, "All Clear!");

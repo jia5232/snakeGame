@@ -8,13 +8,13 @@ struct GateCoordinate{
     int location; // 가장자리 벽 or 중앙 벽
 };
 
-class GateGenerator{
+class Gate{
     private:
     GateCoordinate gate1;
     GateCoordinate gate2;
     int gateTimer;
     public:
-    GateGenerator(int **mapArray);
+    Gate(int **mapArray);
     GateCoordinate getGate(int gateNum);
     // GateCoordinate getGate2();
     void generateRandomGate(int **mapArray);

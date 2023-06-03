@@ -1,7 +1,7 @@
 #include "SnakeMap.h"
 #include "Snake.h"
 #include "ItemGenerator.h"
-#include "GateGenerator.h"
+#include "Gate.h"
 #include <vector>
 #include <ncurses.h>
 #include <thread>
@@ -45,7 +45,7 @@ void SnakeMap::mapReset(){
     }
 }
 
-int SnakeMap::drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& poison, GateGenerator& gate){
+int SnakeMap::drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& poison, Gate& gate){
     vector<SnakeVector> sv = sk.getSnake();
     bool isGrowth = false;
     bool isPoison = false;

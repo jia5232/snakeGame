@@ -4,7 +4,7 @@
 #include <ncurses.h>
 #include "Snake.h"
 #include "ItemGenerator.h"
-#include "GateGenerator.h"
+#include "Gate.h"
 #include "Stage.h"
 using namespace std;
 class SnakeMap {
@@ -17,7 +17,7 @@ private:
 
 public:
     SnakeMap(WINDOW* mainWin,int **map, int height, int width);
-    int drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& poison, GateGenerator& gate);
+    int drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& poison, Gate& gate);
     void mapReset();
 };
 
