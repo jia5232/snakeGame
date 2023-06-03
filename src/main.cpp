@@ -14,7 +14,7 @@ int main()
 {
     int MAP_HEIGHT = 21;
     int MAP_WIDTH = 41;
-    int mainWinRow = 5;
+    int mainWinRow = 17;
     int mainWinCol = 5;
     
     initscr();
@@ -98,8 +98,21 @@ int main()
 
         if (gameState == -1){
             clear();
-            mvwprintw(mainWindow,10, 10, "Game Over!");
-            wrefresh(mainWindow);
+            cout << "Game Over!" << endl;
+            //mvwprintw(mainWindow, 10, 10, "Game Over!");
+            //wrefresh(mainWindow);
+            break;
+        } else if(gameState == 2){ //go to next stage
+            clear();
+            sk = Snake(MAP_HEIGHT, 3, direction);
+            growth = ItemGenerator(5, 5);
+            poison = ItemGenerator(2, 2);
+            gate= GateGenerator(mapTempPtr);
+        } else if(gameState == 3){
+            clear();
+            cout << "All Clear!" << endl;
+            // mvwprintw(mainWindow,0, 0, "All Clear!");
+            // wrefresh(mainWindow);
             break;
         }
         wrefresh(mainWindow);
