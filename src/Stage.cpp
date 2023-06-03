@@ -60,7 +60,7 @@ void Stage::drawScoreBoard()
 
     mvwprintw(scoreBoardWin, 0, 0, "*****************************");
     mvwprintw(scoreBoardWin, 1, 0, "[Score board] ");
-    mvwprintw(scoreBoardWin, 2, 0, "B: %s", &B);
+    mvwprintw(scoreBoardWin, 2, 0, "B: %s", B.c_str());
     mvwprintw(scoreBoardWin, 3, 0, "+: %d", scoreBoard.growth);
     mvwprintw(scoreBoardWin, 4, 0, "-: %d", scoreBoard.poison);
     mvwprintw(scoreBoardWin, 5, 0, "G: %d", scoreBoard.gateCount);
@@ -80,10 +80,10 @@ void Stage::drawMission()
 
     mvwprintw(missionWin, 0, 0, "*****************************");
     mvwprintw(missionWin, 1, 0, "[Mission] ");
-    mvwprintw(missionWin, 2, 0, "B: %s %s", &B, &lengthAchieved);
-    mvwprintw(missionWin, 3, 0, "+: %d %s", currMission.growth, &growthAchieved);
-    mvwprintw(missionWin, 4, 0, "-: %d %s", currMission.poison, &poisonAchieved);
-    mvwprintw(missionWin, 5, 0, "G: %d %s", currMission.gateCount, &gateAchieved);
+    mvwprintw(missionWin, 2, 0, "B: %s %s",  B.c_str(), lengthAchieved.c_str());
+    mvwprintw(missionWin, 3, 0, "+: %d %s", currMission.growth, growthAchieved.c_str());
+    mvwprintw(missionWin, 4, 0, "-: %d %s", currMission.poison, poisonAchieved.c_str());
+    mvwprintw(missionWin, 5, 0, "G: %d %s", currMission.gateCount, gateAchieved.c_str());
     mvwprintw(missionWin, 6, 0, "*****************************");
 
     wrefresh(missionWin); // 윈도우 화면 갱신
