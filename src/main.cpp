@@ -14,7 +14,7 @@ int main()
 {
     int MAP_HEIGHT = 21;
     int MAP_WIDTH = 41;
-    int mainWinRow = 17;
+    int mainWinRow = 3;
     int mainWinCol = 5;
     
     initscr();
@@ -98,9 +98,8 @@ int main()
 
         if (gameState == -1){
             clear();
-            cout << "Game Over!" << endl;
-            //mvwprintw(mainWindow, 10, 10, "Game Over!");
-            //wrefresh(mainWindow);
+            mvwprintw(mainWindow, 10, 10, "Game Over!");
+            wrefresh(mainWindow);
             break;
         } else if(gameState == 2){ //go to next stage
             clear();
@@ -110,9 +109,8 @@ int main()
             gate= GateGenerator(mapTempPtr);
         } else if(gameState == 3){
             clear();
-            cout << "All Clear!" << endl;
-            // mvwprintw(mainWindow,0, 0, "All Clear!");
-            // wrefresh(mainWindow);
+            mvwprintw(mainWindow,0, 0, "All Clear!");
+            wrefresh(mainWindow);
             break;
         }
         wrefresh(mainWindow);

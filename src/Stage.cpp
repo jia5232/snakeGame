@@ -1,14 +1,18 @@
 #include "Stage.h"
 #include <iostream>
 #include <ncurses.h>
+#include <string>
 
 using namespace std;
 
-int missionValues[4][4] = {{5,1,0,0},{7,2,1,0},{8,3,1,1},{10,5,2,2}};
+int missionValues[4][4] = {{5, 3, 0, 0}, {7, 5, 1, 1}, {10, 8, 2, 2}, {12, 15, 5, 3}};
 
-Stage::Stage(){}
-Stage::Stage(WINDOW* mainWin){
-    this->mainWin = mainWin;
+Stage::Stage()
+{
+    stageWin = newwin(1, 30, 4, 50);
+    scoreBoardWin = newwin(10, 30, 5, 50);
+    missionWin = newwin(10, 30, 13, 50);
+
     maxStageNumber = 4;
     currentStage = 1;
 
@@ -16,19 +20,30 @@ Stage::Stage(WINDOW* mainWin){
     scoreBoard.growth = 0;
     scoreBoard.poison = 0;
     scoreBoard.gateCount = 0;
-    for(int i = 0; i < 4; i++){
-       Mission mission(missionValues[i][0],missionValues[i][1],missionValues[i][2],missionValues[i][3]);
-       missions.push_back(mission); 
+    for (int i = 0; i < 4; i++)
+    {
+        Mission mission(missionValues[i][0], missionValues[i][1], missionValues[i][2], missionValues[i][3]);
+        missions.push_back(mission);
     }
 }
 
-void Stage::drawCurrentStage(){
-    cout << "Stage"<< currentStage << "\n\r";
+void Stage::drawInitStage(WINDOW* mainWin){
+    werase(mainWin);
+    mvwprintw(mainWin, 7, 15, "Stage %d", currentStage);
+    wrefresh(mainWin); // 윈도우 화면 갱신
 }
 
-bool Stage::goNextStage(){
+void Stage::drawCurrentStage()
+{
+    mvwprintw(stageWin, 0, 0, "[ Stage %d ]", currentStage);
+    wrefresh(stageWin); // 윈도우 화면 갱신
+}
+
+bool Stage::goNextStage()
+{
     currentStage++;
-    if(currentStage == maxStageNumber){
+    if (currentStage == maxStageNumber)
+    {
         return false;
     }
     scoreBoard.snakeLength = 3;
@@ -38,50 +53,68 @@ bool Stage::goNextStage(){
     return true;
 }
 
-void Stage::printBanner(string title, string B, int growth, int poison, int gate){
-    
-    cout << "*****************************\n\r";
-    cout << "[" << title << "]\n\r";
-    cout << "B: " << B << "\n\r";
-    cout << "+: "<< growth << "\n\r";
-    cout << "-: " << poison << "\n\r";
-    cout << "G: " << gate << "\n\r";
-    cout << "*****************************" << "\n\r\n\r";
-}
-
-void Stage::drawScoreBoard(){
+void Stage::drawScoreBoard()
+{
     Mission currMission = missions[currentStage - 1];
-    string B = to_string(scoreBoard.snakeLength) + " / "  + to_string(currMission.achievement);
-    printBanner("Score board", B, scoreBoard.growth, scoreBoard.poison, scoreBoard.gateCount);
+    string B = to_string(scoreBoard.snakeLength) + " / " + to_string(currMission.achievement);
+
+    mvwprintw(scoreBoardWin, 0, 0, "*****************************");
+    mvwprintw(scoreBoardWin, 1, 0, "[Score board] ");
+    mvwprintw(scoreBoardWin, 2, 0, "B: %s", &B);
+    mvwprintw(scoreBoardWin, 3, 0, "+: %d", scoreBoard.growth);
+    mvwprintw(scoreBoardWin, 4, 0, "-: %d", scoreBoard.poison);
+    mvwprintw(scoreBoardWin, 5, 0, "G: %d", scoreBoard.gateCount);
+    mvwprintw(scoreBoardWin, 6, 0, "*****************************");
+
+    wrefresh(scoreBoardWin); // 윈도우 화면 갱신
 }
 
-void Stage::drawMission(){
+void Stage::drawMission()
+{
     Mission currMission = missions[currentStage - 1];
     string B = to_string(currMission.achievement);
-    printBanner("Mission", B, currMission.growth, currMission.poison, currMission.gateCount);
+    string lengthAchieved = scoreBoard.snakeLength >= currMission.achievement ? ", done" : "";
+    string growthAchieved = scoreBoard.growth >= currMission.growth ? ", done" : "";
+    string poisonAchieved = scoreBoard.poison >= currMission.poison ? ", done" : "";
+    string gateAchieved = scoreBoard.gateCount >= currMission.gateCount ? ", done" : "";
+
+    mvwprintw(missionWin, 0, 0, "*****************************");
+    mvwprintw(missionWin, 1, 0, "[Mission] ");
+    mvwprintw(missionWin, 2, 0, "B: %s %s", &B, &lengthAchieved);
+    mvwprintw(missionWin, 3, 0, "+: %d %s", currMission.growth, &growthAchieved);
+    mvwprintw(missionWin, 4, 0, "-: %d %s", currMission.poison, &poisonAchieved);
+    mvwprintw(missionWin, 5, 0, "G: %d %s", currMission.gateCount, &gateAchieved);
+    mvwprintw(missionWin, 6, 0, "*****************************");
+
+    wrefresh(missionWin); // 윈도우 화면 갱신
 }
 
-bool Stage::isMissionClear(){
+bool Stage::isMissionClear()
+{
     Mission currMission = missions[currentStage - 1];
-    if(scoreBoard.snakeLength >= currMission.achievement &&
+    if (scoreBoard.snakeLength >= currMission.achievement &&
         scoreBoard.growth >= currMission.growth &&
         scoreBoard.poison >= currMission.poison &&
-        scoreBoard.gateCount >= currMission.gateCount){
+        scoreBoard.gateCount >= currMission.gateCount)
+    {
         return true;
     }
     return false;
 }
 
-void Stage::addGrowth(){
+void Stage::addGrowth()
+{
     scoreBoard.growth++;
     scoreBoard.snakeLength++;
 }
 
-void Stage::addPoison(){
+void Stage::addPoison()
+{
     scoreBoard.poison++;
     scoreBoard.snakeLength--;
 }
 
-void Stage::passGate(){
+void Stage::passGate()
+{
     scoreBoard.gateCount++;
 }
