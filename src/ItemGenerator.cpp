@@ -24,7 +24,7 @@ ItemCoordinate ItemGenerator::generateRandomItem(int **mapArray, int numRange)
 
     itemCor = temp;
     itemTimer = 0;
-    cout << itemCor.row << " " << itemCor.col << endl;
+    // cout << itemCor.row << " " << itemCor.col << endl;
     return itemCor;
 }
 int getItemTimer(int itemType);

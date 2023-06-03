@@ -8,8 +8,11 @@ using namespace std;
 #define ITEM_REGEN 50
 #define GAME_OVER -1
 #define GAME_CONTINUE 1
+#define GAME_STAGE_CLEAR 2
+#define GAME_ALL_CLEAR 3
 SnakeMap::SnakeMap(WINDOW* mainWin,int **map, int height, int width): mainWin(mainWin), mapWidth(width), mapHeight(height)
 {
+    stage = Stage(mainWin);
     mapArray = new int*[mapHeight];
     for(int i = 0; i < mapHeight; i++){
         mapArray[i] = new int[mapHeight];
@@ -21,8 +24,21 @@ SnakeMap::SnakeMap(WINDOW* mainWin,int **map, int height, int width): mainWin(ma
     }
 }
 void SnakeMap::mapReset(){
-
+    for(int i = 0; i < mapHeight; i++){
+        for(int j = 0; j < mapHeight; j++){
+            if((i != 0 && i != 20) && (j != 0 && j != 20)){
+                mapArray[i][j] = 0;
+            }else{
+                if((i == 0 && j == 0) || (i == 0 && j == 20) || (i == 20 && j == 0) || (i == 20 && j == 20)){
+                    mapArray[i][j] = 2;
+                }else{
+                    mapArray[i][j] = 1;
+                }
+            }
+        }
+    }
 }
+
 int SnakeMap::drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& poison, GateGenerator& gate){
     vector<SnakeVector> sv = sk.getSnake();
     bool isGrowth = false;
@@ -49,8 +65,10 @@ int SnakeMap::drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& pois
         if (i == 0) {
             if (mapArray[row][col] == 5) {
                 isGrowth = true;
+                stage.addGrowth();
             } else if (mapArray[row][col] == 6) {
                 isPoison = true;
+                stage.addPoison();
             } else if(mapArray[row][col] == 7){
                 // isGate = true;
                 if(row == gate1.row && col == gate1.col){ // gate1로 진입 시
@@ -58,6 +76,7 @@ int SnakeMap::drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& pois
                 }else if(row == gate2.row && col == gate2.col){ // gate2로 진입 시
                     gate.setSnake(gate1, sk, mapArray); // gate1을 이용해 방향 스네이크 헤드 위치 및 방향 변경
                 }
+                stage.passGate();
             }
             // mapArray[row][col] = 3;
             mapArray[sv[i].row][sv[i].col] = 3;
@@ -69,6 +88,18 @@ int SnakeMap::drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& pois
             mapArray[row][col] = 4;
         }
     }
+
+    if(stage.isMissionClear()){
+        if(stage.goNextStage()){
+            this->mapReset();
+            return GAME_STAGE_CLEAR; 
+        }
+        return GAME_ALL_CLEAR;
+    }
+
+    stage.drawCurrentStage();
+    stage.drawScoreBoard();
+    stage.drawMission();
 
     for(int i = 0; i < mapHeight; i++){
         start_color();

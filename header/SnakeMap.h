@@ -5,6 +5,7 @@
 #include "Snake.h"
 #include "ItemGenerator.h"
 #include "GateGenerator.h"
+#include "Stage.h"
 using namespace std;
 class SnakeMap {
 private:
@@ -12,6 +13,7 @@ private:
     int **mapArray;
     int mapWidth;
     int mapHeight;
+    Stage stage;
 
 public:
     SnakeMap(WINDOW* mainWin,int **map, int height, int width);
