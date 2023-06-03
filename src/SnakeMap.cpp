@@ -4,7 +4,10 @@
 #include "GateGenerator.h"
 #include <vector>
 #include <ncurses.h>
+#include <thread>
+
 using namespace std;
+
 #define ITEM_REGEN 50
 #define GAME_OVER -1
 #define GAME_CONTINUE 1
@@ -12,7 +15,10 @@ using namespace std;
 #define GAME_ALL_CLEAR 3
 SnakeMap::SnakeMap(WINDOW* mainWin,int **map, int height, int width): mainWin(mainWin), mapWidth(width), mapHeight(height)
 {
-    stage = Stage(mainWin);
+    stage = Stage();
+    stage.drawInitStage(mainWin);
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+
     mapArray = new int*[mapHeight];
     for(int i = 0; i < mapHeight; i++){
         mapArray[i] = new int[mapHeight];
@@ -89,13 +95,6 @@ int SnakeMap::drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& pois
         }
     }
 
-    if(stage.isMissionClear()){
-        if(stage.goNextStage()){
-            this->mapReset();
-            return GAME_STAGE_CLEAR; 
-        }
-        return GAME_ALL_CLEAR;
-    }
 
     stage.drawCurrentStage();
     stage.drawScoreBoard();
@@ -154,6 +153,15 @@ int SnakeMap::drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& pois
         mapArray[skPop.row][skPop.col] = 0;
     }
     
+    if(stage.isMissionClear()){
+        if(stage.goNextStage()){
+            this->mapReset();
+            stage.drawInitStage(mainWin);
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+            return GAME_STAGE_CLEAR; 
+        }
+        return GAME_ALL_CLEAR;
+    }
 
     if(growth.getItemTimer() >= ITEM_REGEN){
         mapArray[growthCor.row][growthCor.col] = 0;

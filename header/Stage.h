@@ -2,6 +2,7 @@
 #define STAGE_H
 #include <vector>
 #include <ncurses.h>
+#include <string>
 
 using namespace std;
 
@@ -22,17 +23,20 @@ struct Mission{
 
 class Stage{
     private:
-    WINDOW* mainWin;
+    WINDOW* stageWin;
+    WINDOW* scoreBoardWin;
+    WINDOW* missionWin;
     int currentStage;
     int maxStageNumber;
     ScoreBoard scoreBoard;
     vector<Mission> missions;
-    void printBanner(string title, string B, int growth, int poison, int gate);
-
+    void printBanner(WINDOW* win, string title, string B, int growth, int poison, int gate);
+        
     public:
     Stage();
     Stage(WINDOW* mainWin);
     bool goNextStage();
+    void drawInitStage(WINDOW* mainWin);
     void drawCurrentStage();
     void drawScoreBoard();
     void drawMission();
