@@ -18,7 +18,7 @@ private:
 public:
     SnakeMap(WINDOW* mainWin,int **map, int height, int width);
     int drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& poison, Gate& gate);
-    void mapReset();
+    void initMap(vector<vector<int>> obstacles);
 };
 
 #endif
