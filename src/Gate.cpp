@@ -5,7 +5,9 @@ using namespace std;
 
 Gate::Gate(int **mapArray){
     generateRandomGate(mapArray);
+    isGate = false;
     gateTimer = 50;
+    option = 0;
 }
 
 void Gate::generateRandomGate(int **mapArray)
@@ -35,9 +37,7 @@ void Gate::generateRandomGate(int **mapArray)
     isGateLocation(gate1);
     isGateLocation(gate2);
 
-    gateTimer = 50;
-    cout << gate1.row << " " << gate1.col  << endl;
-    cout << gate2.row << " " << gate2.col  << endl;
+    // gateTimer = 50;
 }
 
 GateCoordinate Gate::getGate(int gateNum){
@@ -51,6 +51,26 @@ GateCoordinate Gate::getGate(int gateNum){
 
 int Gate::getGateTimer(){
     return gateTimer;
+}
+
+void Gate::setGateTimer(int num){
+    gateTimer = num;
+}
+
+bool Gate::getIsGate(){
+    return isGate;
+}
+
+void Gate::setIsGate(bool state){
+    isGate = state;
+}
+
+int Gate::getOption(){
+    return option;
+}
+
+void Gate::setOption(int num){
+    option = num;
 }
 
 void Gate::isGateLocation(GateCoordinate& gate){
@@ -157,6 +177,42 @@ void Gate::centerGate(int gateRow, int gateCol, Snake& snake, int **mapArray){
         }else if(mapArray[gateRow][right] == 0){ // 오
             snake.setSnakeDirection(KEY_RIGHT);
             snake.setSnakeHead(gateRow, right);
+        }
+    }
+}
+
+void Gate::checkGatePassed(Snake sk, vector<SnakeVector > sv, GateCoordinate gate){
+    int len = sv.size() - 1;
+    int dir = sk.getSnakeDirection();
+
+    int down = gate.row + 1; 
+    int up = gate.row - 1; 
+    int right = gate.col + 1; 
+    int left = gate.col - 1; 
+
+    if(dir == KEY_DOWN){
+        if (sv[len].row == down && sv[len].col == gate.col){
+            isGate = false;
+        }else{
+            isGate = true;
+        }
+    }else if(dir == KEY_UP){
+        if (sv[len].row == up && sv[len].col == gate.col){
+            isGate = false;
+        }else{
+            isGate = true;
+        }
+    }else if(dir == KEY_LEFT){
+        if (sv[len].row == gate.row && sv[len].col == left){
+            isGate = false;
+        }else{
+            isGate = true;
+        }
+    }else if(dir == KEY_RIGHT){
+        if (sv[len].row == gate.row && sv[len].col == right){
+            isGate = false;
+        }else{
+            isGate = true;
         }
     }
 }

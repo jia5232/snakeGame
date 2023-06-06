@@ -5,6 +5,7 @@
 #include <vector>
 #include <ncurses.h>
 #include <thread>
+#include <iostream>
 
 using namespace std;
 
@@ -54,7 +55,7 @@ int SnakeMap::drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& pois
     mapArray[growthCor.row][growthCor.col] = 5;
     mapArray[poisonCor.row][poisonCor.col] = 6;
 
-    // bool isGate = false;
+    bool isGate = gate.getIsGate();
     GateCoordinate gate1 = gate.getGate(1);
     GateCoordinate gate2 = gate.getGate(2);
 
@@ -76,10 +77,12 @@ int SnakeMap::drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& pois
                 isPoison = true;
                 stage.addPoison();
             } else if(mapArray[row][col] == 7){
-                // isGate = true;
+                gate.setIsGate(true);
                 if(row == gate1.row && col == gate1.col){ // gate1로 진입 시
+                    gate.setOption(1);
                     gate.setSnake(gate2, sk, mapArray); // gate2를 이용해 방향 스네이크 헤드 위치 및 방향 변경
                 }else if(row == gate2.row && col == gate2.col){ // gate2로 진입 시
+                    gate.setOption(2);
                     gate.setSnake(gate1, sk, mapArray); // gate1을 이용해 방향 스네이크 헤드 위치 및 방향 변경
                 }
                 stage.passGate();
@@ -95,6 +98,27 @@ int SnakeMap::drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& pois
         }
     }
 
+    // Gate
+    if(gate.getGateTimer() <= 0){
+        mapArray[gate1.row][gate1.col] = 7;
+        mapArray[gate2.row][gate2.col] = 7;
+    }
+    
+    // isGate가 true일 때 Gate에 들어가있는 상태
+    if(isGate){
+        if(gate.getOption() == 1){ // gate1로 들어간 경우
+            gate.checkGatePassed(sk, sv, gate2); // gate2를 빠져나왔는지 확인
+        }else if(gate.getOption() == 2){ // gate2로 들어간 경우
+            gate.checkGatePassed(sk, sv, gate1); // gate1을 빠져나왔는지 확인
+        }
+
+        if(!gate.getIsGate()){ // Gate를 빠져나와서 isGate가 false가 되면
+            // 기존 Gate를 맵에서 지워줌
+            mapArray[gate1.row][gate1.col] = 1; 
+            mapArray[gate2.row][gate2.col] = 1; 
+            gate.generateRandomGate(mapArray);
+        }
+    }
 
     stage.drawCurrentStage();
     stage.drawScoreBoard();
@@ -156,6 +180,7 @@ int SnakeMap::drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& pois
     if(stage.isMissionClear()){
         if(stage.goNextStage()){
             this->initMap(stage.getNextStage());
+            gate.generateRandomGate(mapArray);
             stage.drawInitStage(mainWin);
             std::this_thread::sleep_for(std::chrono::seconds(2));
             return GAME_STAGE_CLEAR; 
@@ -178,12 +203,6 @@ int SnakeMap::drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& pois
     }else if(isPoison){
         ItemCoordinate poisonCor = poison.generateRandomItem(mapArray, mapHeight - 2);
         mapArray[poisonCor.row][poisonCor.col] = 6;
-    }
-
-    // Gate
-    if(gate.getGateTimer() <= 0){
-        mapArray[gate1.row][gate1.col] = 7;
-        mapArray[gate2.row][gate2.col] = 7;
     }
 
     return GAME_CONTINUE;

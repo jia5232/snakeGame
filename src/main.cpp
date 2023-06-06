@@ -106,7 +106,6 @@ int main()
             sk = Snake(MAP_HEIGHT, 3, direction);
             growth = ItemGenerator(5, 5);
             poison = ItemGenerator(2, 2);
-            gate= Gate(mapTempPtr);
         } else if(gameState == 3){
             clear();
             mvwprintw(mainWindow,0, 0, "All Clear!");
