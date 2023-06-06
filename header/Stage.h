@@ -21,6 +21,7 @@ struct Mission{
     Mission(int a, int g, int p, int gate): achievement(a), growth(g), poison(p), gateCount(gate) {}
 };
 
+
 class Stage{
     private:
     WINDOW* stageWin;
@@ -31,11 +32,11 @@ class Stage{
     ScoreBoard scoreBoard;
     vector<Mission> missions;
     void printBanner(WINDOW* win, string title, string B, int growth, int poison, int gate);
-        
+    
     public:
     Stage();
-    Stage(WINDOW* mainWin);
     bool goNextStage();
+    vector<vector<int>> getNextStage();
     void drawInitStage(WINDOW* mainWin);
     void drawCurrentStage();
     void drawScoreBoard();

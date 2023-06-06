@@ -29,11 +29,11 @@ SnakeMap::SnakeMap(WINDOW* mainWin,int **map, int height, int width): mainWin(ma
         }
     }
 }
-void SnakeMap::mapReset(){
+void SnakeMap::initMap(vector<vector<int>> obstacles){
     for(int i = 0; i < mapHeight; i++){
         for(int j = 0; j < mapHeight; j++){
             if((i != 0 && i != 20) && (j != 0 && j != 20)){
-                mapArray[i][j] = 0;
+                mapArray[i][j] = obstacles[i][j];
             }else{
                 if((i == 0 && j == 0) || (i == 0 && j == 20) || (i == 20 && j == 0) || (i == 20 && j == 20)){
                     mapArray[i][j] = 2;
@@ -155,7 +155,7 @@ int SnakeMap::drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& pois
     
     if(stage.isMissionClear()){
         if(stage.goNextStage()){
-            this->mapReset();
+            this->initMap(stage.getNextStage());
             stage.drawInitStage(mainWin);
             std::this_thread::sleep_for(std::chrono::seconds(2));
             return GAME_STAGE_CLEAR; 
