@@ -95,8 +95,9 @@ vector<vector<int>> stageObstacles[] = {
 
 Stage::Stage()
 {
-    stageWin = newwin(1, 30, 4, 50);
-    scoreBoardWin = newwin(10, 30, 5, 50);
+    //윈도우 객체 초기화
+    stageWin = newwin(1, 30, 4, 50); 
+    scoreBoardWin = newwin(10, 30, 5, 50); 
     missionWin = newwin(10, 30, 13, 50);
 
     maxStageNumber = 4;
@@ -106,7 +107,7 @@ Stage::Stage()
     scoreBoard.growth = 0;
     scoreBoard.poison = 0;
     scoreBoard.gateCount = 0;
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 4; i++) //스테이지를 초기화하면서 미션 컬렉션을 초기화한다.
     {
         Mission mission(missionValues[i][0], missionValues[i][1], missionValues[i][2], missionValues[i][3]);
         missions.push_back(mission);
@@ -125,10 +126,10 @@ void Stage::drawCurrentStage()
     wrefresh(stageWin); // 윈도우 화면 갱신
 }
 
-bool Stage::goNextStage()
+bool Stage::goNextStage() //현재 스테이지 클리어시 다음 스테이지에서의 값을 초기화.
 {
     currentStage++;
-    if (currentStage == maxStageNumber)
+    if (currentStage == maxStageNumber) //모든 스테이지를 끝냈으면 return false
     {
         return false;
     }
@@ -139,16 +140,16 @@ bool Stage::goNextStage()
     return true;
 }
 
-vector<vector<int>> Stage::getNextStage(){
+vector<vector<int>> Stage::getNextStage(){//새로운 스테이지의 장애물 배열을 리턴
     return stageObstacles[(currentStage - 1) % 4];
 }
 
-void Stage::drawScoreBoard()
+void Stage::drawScoreBoard() //현재 게임 진척도를 볼 수 있는 점수판
 {
     Mission currMission = missions[currentStage - 1];
     string B = to_string(scoreBoard.snakeLength) + " / " + to_string(currMission.achievement);
 
-    mvwprintw(scoreBoardWin, 0, 0, "*****************************");
+    mvwprintw(scoreBoardWin, 0, 0, "*****************************"); //커맨드 윈도우에 출력될 수 있게 하는 함수
     mvwprintw(scoreBoardWin, 1, 0, "[Score board] ");
     mvwprintw(scoreBoardWin, 2, 0, "B: %s", B.c_str());
     mvwprintw(scoreBoardWin, 3, 0, "+: %d", scoreBoard.growth);
@@ -159,10 +160,11 @@ void Stage::drawScoreBoard()
     wrefresh(scoreBoardWin); // 윈도우 화면 갱신
 }
 
-void Stage::drawMission()
+void Stage::drawMission() //해당 스테이지의 목표치를 볼 수 있는 점수판.
 {
     Mission currMission = missions[currentStage - 1];
     string B = to_string(currMission.achievement);
+    //목표치를 성취하면 done, 그렇지 않으면 빈 문자열로 초기화.
     string lengthAchieved = scoreBoard.snakeLength >= currMission.achievement ? ", done" : "";
     string growthAchieved = scoreBoard.growth >= currMission.growth ? ", done" : "";
     string poisonAchieved = scoreBoard.poison >= currMission.poison ? ", done" : "";
@@ -179,7 +181,7 @@ void Stage::drawMission()
     wrefresh(missionWin); // 윈도우 화면 갱신
 }
 
-bool Stage::isMissionClear()
+bool Stage::isMissionClear() //미션이 클리어되었는지 확인.
 {
     Mission currMission = missions[currentStage - 1];
     if (scoreBoard.snakeLength >= currMission.achievement &&

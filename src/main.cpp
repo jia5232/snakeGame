@@ -92,7 +92,7 @@ int main()
             break;
         }
 
-        // 게임 화면 업데이트
+        // 게임 화면 업데이트 (키를 받을때마다 업데이트)
         clear();
         int gameState = sMap.drawSnakeMap(sk, growth, poison, gate);
 

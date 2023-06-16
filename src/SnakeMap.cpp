@@ -17,8 +17,8 @@ using namespace std;
 SnakeMap::SnakeMap(WINDOW* mainWin,int **map, int height, int width): mainWin(mainWin), mapWidth(width), mapHeight(height)
 {
     stage = Stage();
-    stage.drawInitStage(mainWin);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    stage.drawInitStage(mainWin); //현재 어떤 스테이지인지 게임 시작전에 알려줌.
+    std::this_thread::sleep_for(std::chrono::seconds(2)); //화면 2초간 고정
 
     mapArray = new int*[mapHeight];
     for(int i = 0; i < mapHeight; i++){
@@ -30,12 +30,12 @@ SnakeMap::SnakeMap(WINDOW* mainWin,int **map, int height, int width): mainWin(ma
         }
     }
 }
-void SnakeMap::initMap(vector<vector<int>> obstacles){
+void SnakeMap::initMap(vector<vector<int>> obstacles){ //스테이지에서 설정한 obstacle을 받아서 맵을 초기화.
     for(int i = 0; i < mapHeight; i++){
         for(int j = 0; j < mapHeight; j++){
             if((i != 0 && i != 20) && (j != 0 && j != 20)){
                 mapArray[i][j] = obstacles[i][j];
-            }else{
+            }else{ //가장자리는 값이 고정되므로 따로 처리
                 if((i == 0 && j == 0) || (i == 0 && j == 20) || (i == 20 && j == 0) || (i == 20 && j == 20)){
                     mapArray[i][j] = 2;
                 }else{
@@ -120,9 +120,10 @@ int SnakeMap::drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& pois
         }
     }
 
+    //위에서는 데이터를 업데이트하고, 이제 화면에 업데이트해줌.
     stage.drawCurrentStage();
-    stage.drawScoreBoard();
-    stage.drawMission();
+    stage.drawScoreBoard(); //현재 스코어를 알려주는 보드
+    stage.drawMission(); //목표치를 알려주는 보드
 
     for(int i = 0; i < mapHeight; i++){
         start_color();
@@ -177,15 +178,15 @@ int SnakeMap::drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& pois
         mapArray[skPop.row][skPop.col] = 0;
     }
     
-    if(stage.isMissionClear()){
-        if(stage.goNextStage()){
-            this->initMap(stage.getNextStage());
-            gate.generateRandomGate(mapArray);
-            stage.drawInitStage(mainWin);
+    if(stage.isMissionClear()){ //미션이 클리어되면,
+        if(stage.goNextStage()){ //마지막 스테이지가 아니라면 다음 스테이지로 이동하기 위한 설정 초기화.
+            this->initMap(stage.getNextStage()); //다음 스테이지의 맵(obstacle)으로 초기화
+            gate.generateRandomGate(mapArray); 
+            stage.drawInitStage(mainWin); //다음 스테이지 번호를 알려줌.
             std::this_thread::sleep_for(std::chrono::seconds(2));
             return GAME_STAGE_CLEAR; 
         }
-        return GAME_ALL_CLEAR;
+        return GAME_ALL_CLEAR; //마지막 스테이지라면 GAME_ALL_CLEAR 반환하고 게임을 끝냄.
     }
 
     if(growth.getItemTimer() >= ITEM_REGEN){
