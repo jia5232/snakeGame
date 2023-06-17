@@ -14,10 +14,11 @@ private:
     int mapWidth;
     int mapHeight;
     Stage stage;
+    Gate gate;
 
 public:
-    SnakeMap(WINDOW* mainWin,int **map, int height, int width);
-    int drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& poison, Gate& gate);
+    SnakeMap(WINDOW* mainWin, int height, int width);
+    int drawSnakeMap(Snake& sk, ItemGenerator& growth, ItemGenerator& poison);
     void initMap(vector<vector<int>> obstacles);
 };
 
