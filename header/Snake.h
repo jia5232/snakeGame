@@ -27,8 +27,6 @@ public:
     void setSnakeDirection(int direction);
     int getSnakeDirection() const;
     void setSnakeHead(int row, int col);
-    // int getSnakeLen() const;
-    // void setSnakeLen(int len);
 };
 
 #endif

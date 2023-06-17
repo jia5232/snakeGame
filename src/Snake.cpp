@@ -11,7 +11,6 @@ Snake::Snake(int mapHeight, int len, int direction)
     for(int i = 0; i < len; i++){
         snake.push_back({snakeHeadRow - i, snakeHeadCol});
     }
-    //헤드 위치 설정해야함
 }
 // int Snake::getSnakeLen()const{
 //     return snakeLen;
