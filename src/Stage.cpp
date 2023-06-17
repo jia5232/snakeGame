@@ -5,7 +5,8 @@
 
 using namespace std;
 
-int missionValues[4][4] = {{5, 3, 0, 0}, {7, 5, 1, 1}, {10, 8, 2, 2}, {12, 15, 5, 3}};
+int missionValues[4][4] = {{4, 1, 0, 0}, {4, 1, 0, 0}, {4, 1, 0, 0}, {4, 1, 0, 0}};
+// int missionValues[4][4] = {{5, 3, 0, 0}, {7, 5, 1, 1}, {10, 8, 2, 2}, {12, 15, 5, 3}};
 vector<vector<int>> stageObstacles[] = {
     {{2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2}, 
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 
@@ -129,7 +130,7 @@ void Stage::drawCurrentStage()
 bool Stage::goNextStage() //현재 스테이지 클리어시 다음 스테이지에서의 값을 초기화.
 {
     currentStage++;
-    if (currentStage == maxStageNumber) //모든 스테이지를 끝냈으면 return false
+    if (currentStage > maxStageNumber) //모든 스테이지를 끝냈으면 return false
     {
         return false;
     }

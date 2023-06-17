@@ -244,6 +244,7 @@ int SnakeMap::drawSnakeMap(Snake &sk, ItemGenerator &growth, ItemGenerator &pois
             std::this_thread::sleep_for(std::chrono::seconds(2));
             return GAME_STAGE_CLEAR;
         }
+        clear();
         return GAME_ALL_CLEAR; //마지막 스테이지라면 GAME_ALL_CLEAR 반환하고 게임을 끝냄.
     }
 
