@@ -12,12 +12,7 @@ Snake::Snake(int mapHeight, int len, int direction)
         snake.push_back({snakeHeadRow - i, snakeHeadCol});
     }
 }
-// int Snake::getSnakeLen()const{
-//     return snakeLen;
-// }
-// void Snake::setSnakeLen(int len){
-//     snakeLen = len;
-// }
+
 //뱀 좌표를 전달하는 함수
 vector<SnakeVector> Snake::getSnake() const {
     return snake;

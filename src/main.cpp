@@ -9,7 +9,7 @@
 using namespace std;
 #define TICK_RATE 200
 
-int main()
+bool gameStart()
 {
     int MAP_HEIGHT = 21;
     int MAP_WIDTH = 41;
@@ -80,9 +80,6 @@ int main()
             } // 반대 방향으로는 이동하면 gamover
             sk.setSnakeDirection(KEY_RIGHT);
             break;
-        case 'q':
-            quit = true;
-            break;
         }
 
         // 게임 화면 업데이트
@@ -119,11 +116,14 @@ int main()
             int key = getch();
             clear();
             mvwprintw(mainWindow, 10, 10, "All Clear!");
-            mvwprintw(mainWindow, 11, 10, "press q to exit");
+            mvwprintw(mainWindow, 11, 10, "press r to replay");
+            mvwprintw(mainWindow, 12, 10, "press q to exit");
             wrefresh(mainWindow);
             if (key == 'q')
             {
-                break;
+                return false;
+            }else if(key == 'r'){
+                return true;
             }
             this_thread::sleep_for(tickDuration);
         }
@@ -134,14 +134,22 @@ int main()
         {
             int key = getch();
             clear();
-            mvwprintw(mainWindow, 10, 10, "Game Over!");
-            mvwprintw(mainWindow, 11, 10, "press q to exit");
+            mvwprintw(mainWindow, 10, 20, "Game Over!");
+            mvwprintw(mainWindow, 11, 20, "press r to replay");
+            mvwprintw(mainWindow, 12, 20, "press q to exit");
             wrefresh(mainWindow);
             if (key == 'q')
             {
-                break;
+                return false;
+            }else if(key == 'r'){
+                return true;
             }
             this_thread::sleep_for(tickDuration);
         }
     }
+}
+
+int main()
+{
+    while(gameStart() != false){}
 }

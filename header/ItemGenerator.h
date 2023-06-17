@@ -13,6 +13,5 @@ class ItemGenerator{
     ItemCoordinate getItemCoordinate();
     ItemCoordinate generateRandomItem(int **mapArray, int numRange);
     int getItemTimer();
-    // void startItemTimer();
 };
 #endif

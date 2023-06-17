@@ -39,11 +39,6 @@ SnakeMap::SnakeMap(WINDOW *mainWin, int height, int width) : mainWin(mainWin), m
     this->initMap(stage.getNextStage());
     gate = Gate();
     gate.generateRandomGate(mapArray);
-    // for(int i = 0; i < mapHeight; i++){
-    //     for(int j = 0; j < mapHeight; j++){
-    //         mapArray[i][j] = map[i][j];
-    //     }
-    // }
 }
 void SnakeMap::initMap(vector<vector<int>> obstacles){ //스테이지에서 설정한 obstacle을 받아서 맵을 초기화.
     for(int i = 0; i < mapHeight; i++){
