@@ -34,6 +34,7 @@ int main()
     ItemGenerator poison(2, 2);
 
     bool quit = false;
+    bool gclear = false;
     // 틱 간격 설정
     constexpr chrono::milliseconds tickDuration(TICK_RATE); // 200 밀리초 (0.2초)
     while (!quit)
@@ -44,7 +45,8 @@ int main()
         switch (key)
         {
         case KEY_UP:
-            if (sk.getSnakeDirection() == KEY_DOWN){
+            if (sk.getSnakeDirection() == KEY_DOWN)
+            {
                 clear();
                 mvwprintw(mainWindow, 10, 10, "Game Over!");
                 wrefresh(mainWindow);
@@ -52,7 +54,8 @@ int main()
             sk.setSnakeDirection(KEY_UP);
             break;
         case KEY_DOWN:
-            if (sk.getSnakeDirection() == KEY_UP){
+            if (sk.getSnakeDirection() == KEY_UP)
+            {
                 clear();
                 mvwprintw(mainWindow, 10, 10, "Game Over!");
                 wrefresh(mainWindow);
@@ -60,7 +63,8 @@ int main()
             sk.setSnakeDirection(KEY_DOWN);
             break;
         case KEY_LEFT:
-            if (sk.getSnakeDirection() == KEY_RIGHT){
+            if (sk.getSnakeDirection() == KEY_RIGHT)
+            {
                 clear();
                 mvwprintw(mainWindow, 10, 10, "Game Over!");
                 wrefresh(mainWindow);
@@ -68,7 +72,8 @@ int main()
             sk.setSnakeDirection(KEY_LEFT);
             break;
         case KEY_RIGHT:
-            if (sk.getSnakeDirection() == KEY_LEFT){
+            if (sk.getSnakeDirection() == KEY_LEFT)
+            {
                 clear();
                 mvwprintw(mainWindow, 10, 10, "Game Over!");
                 wrefresh(mainWindow);
@@ -86,9 +91,7 @@ int main()
 
         if (gameState == -1)
         {
-            clear();
-            mvwprintw(mainWindow, 10, 10, "Game Over!");
-            wrefresh(mainWindow);
+            gclear = false;
             break;
         }
         else if (gameState == 2)
@@ -100,14 +103,45 @@ int main()
         }
         else if (gameState == 3)
         {
-            clear();
-            mvwprintw(mainWindow, 0, 0, "All Clear!");
-            wrefresh(mainWindow);
+            gclear = true;
             break;
         }
         wrefresh(mainWindow);
 
         // 틱 간격 지연
         this_thread::sleep_for(tickDuration);
+    }
+
+    if (gclear)
+    {
+        while (true)
+        {
+            int key = getch();
+            clear();
+            mvwprintw(mainWindow, 10, 10, "All Clear!");
+            mvwprintw(mainWindow, 11, 10, "press q to exit");
+            wrefresh(mainWindow);
+            if (key == 'q')
+            {
+                break;
+            }
+            this_thread::sleep_for(tickDuration);
+        }
+    }
+    else
+    {
+        while (true)
+        {
+            int key = getch();
+            clear();
+            mvwprintw(mainWindow, 10, 10, "Game Over!");
+            mvwprintw(mainWindow, 11, 10, "press q to exit");
+            wrefresh(mainWindow);
+            if (key == 'q')
+            {
+                break;
+            }
+            this_thread::sleep_for(tickDuration);
+        }
     }
 }
