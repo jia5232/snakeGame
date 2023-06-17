@@ -16,7 +16,7 @@ class Gate{
     bool isGate;
     int option;
     public:
-    Gate(int **mapArray);
+    Gate();
     GateCoordinate getGate(int gateNum);
     // GateCoordinate getGate2();
     void generateRandomGate(int **mapArray);

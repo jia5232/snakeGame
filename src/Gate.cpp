@@ -3,8 +3,8 @@
 #include <random>
 using namespace std;
 
-Gate::Gate(int **mapArray){
-    generateRandomGate(mapArray);
+Gate::Gate(){
+    // generateRandomGate(mapArray);
     isGate = false;
     gateTimer = 50;
     option = 0;
